@@ -1,137 +1,157 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
-#include <string.h>
 
 using namespace std;
 
-class Book {
-    string name;
+class Vector {
+	int x, y;
 public:
-    Book() {
-        this->name = "I am legend";
-    }
+	Vector() {
+		x = 1;
+		y = 1;
+	}
+	Vector(int x, int y) {
+		this->x = x;
+		this->y = y;
+	}
 
-    Book(string name) {
-        this->name = name;
-    }
+	void PrintInfo() {
+		cout << "X: " << this->x << "  Y: " << this->y << endl;
+	}
 
-    Book(const Book& other) {
-        this->name = other.name;
-    }
+	Vector operator+(const Vector& other) {
+		return Vector(this->x + other.x, this->y + other.y);
+	}
 
-    Book operator=(const Book& other) {
-        this->name = other.name;
-        return *this;
-    }
-    friend ostream& operator<<(ostream& os, const Book& book);
+	Vector operator-(const Vector& other) {
+		return Vector(this->x - other.x, this->y - other.y);
+	}
+
+	Vector operator++() {
+		++this->x;
+		++this->y;
+		return *this;
+	}
+
+	Vector operator++(int) {
+		Vector temp = *this;
+		++this->x;
+		++this->y;
+		return temp;
+	}
+
+	Vector operator--() {
+		--this->x;
+		--this->y;
+		return *this;
+	}
+
+	Vector operator--(int) {
+		Vector temp = *this;
+		--this->x;
+		--this->y;
+		return temp;
+	}
+
+	bool  operator>(Vector& other) {
+		if (this->x > other.x && this->y > other.y) {
+			return true;
+		}
+		return false;
+	}
+
+	bool  operator>=(Vector& other) {
+		if (this->x >= other.x && this->y >= other.y) {
+			return true;
+		}
+		return false;
+	}
+
+	bool  operator<(Vector& other) {
+		if (this->x < other.x && this->y < other.y) {
+			return true;
+		}
+		return false;
+	}
+
+	bool  operator<=(Vector& other) {
+		if (this->x <= other.x && this->y <= other.y) {
+			return true;
+		}
+		return false;
+	}
+
+	bool  operator==(Vector& other) {
+		if (this->x == other.x && this->y == other.y) {
+			return true;
+		}
+		return false;
+	}
+
+
+	Vector operator=(const Vector& other) {
+		return *this;
+	}
+
+
+	friend ostream& operator<<(ostream& os, const Vector& book);
 };
 
-ostream& operator<<(ostream& os, const Book& book) {
-    os << book.name;
-    return os;
+ostream& operator<<(ostream& os, const Vector& other) {
+	os << "X: " << other.x << "  Y: " << other.y << endl;;
+	return os;
 }
 
-class Human {
-    char* name;
-    Book* arrayOfBooks;
-    int arrayOfBooksAmount;
-public:
-    Human(const char* name) {
-        this->arrayOfBooksAmount = 1;
-        this->arrayOfBooks = new Book[this->arrayOfBooksAmount];
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-    }
-
-    Human operator+(const Book& book) {
-        Book* tempArrayOfBooks = new Book[this->arrayOfBooksAmount];
-        for (int i = 0; i < this->arrayOfBooksAmount; i++) {
-            tempArrayOfBooks[i] = this->arrayOfBooks[i];
-        }
-
-        delete[] this->arrayOfBooks;
-        this->arrayOfBooksAmount++;
-
-        this->arrayOfBooks = new Book[this->arrayOfBooksAmount];
-
-        for (int i = 0; i < this->arrayOfBooksAmount - 1; i++) {
-            this->arrayOfBooks[i] = tempArrayOfBooks[i];
-        }
-
-        this->arrayOfBooks[this->arrayOfBooksAmount - 1] = book;
-
-        return *this;
-    }
-
-    Human operator-(const Book& book) {
-        if (arrayOfBooksAmount == 0) {
-            return *this;
-        }
-        Book* tempArrayOfBooks = new Book[this->arrayOfBooksAmount];
-        for (int i = 0; i < this->arrayOfBooksAmount; i++) {
-            tempArrayOfBooks[i] = this->arrayOfBooks[i];
-        }
-
-        delete[] this->arrayOfBooks;
-        this->arrayOfBooksAmount--;
-
-        this->arrayOfBooks = new Book[this->arrayOfBooksAmount];
-
-        for (int i = 0; i < this->arrayOfBooksAmount - 1; i++) {
-            this->arrayOfBooks[i] = tempArrayOfBooks[i];
-        }
-
-        this->arrayOfBooks[this->arrayOfBooksAmount - 1] = book;
-
-        return *this;
-    }
-
-    Human operator=(const Human& other) {
-        if (this != &other) {
-            return *this;
-        }
-
-        char* tempName = new char[strlen(other.name) + 1];
-
-        strcpy(tempName, other.name);
-
-        delete[] this->name;
-
-        this->name = new char[strlen(tempName) + 1];
-
-        strcpy(this->name, tempName);
-
-        return *this;
-    }
-
-    // a > b
-    //bool operator>(const Human& other) {
-    //    if (strlen(this->name) > strlen(other.name)) {
-    //        return true;
-    //    }
-    //    return false;
-    //}
-
-    void PrintInfo() {
-        cout << "Name: " << this->name << endl;
-        cout << "Books: " << endl;
-        for (int i = 0; i < this->arrayOfBooksAmount; i++) {
-            cout << "Book name: " << this->arrayOfBooks[i] << endl;
-        }
-    }
-};
-
-int main() {
-    Human obj = Human("Boryslav");
-
-    obj.PrintInfo();
-
-    Book book = Book("My book");
-    obj = obj - book;
-    cout << "Hello,world" << endl;
-    obj.PrintInfo();
-
+int main()
+{
+	Vector obj;
+	Vector obj2 = Vector(6, 9);
+	Vector obj3;
+	Vector obj4;
+	obj3 = obj + obj2;
+	obj3.PrintInfo();
+	obj4 = obj3 - obj3;
+	obj4.PrintInfo();
+	obj = obj++;
+	obj.PrintInfo();
+	obj = ++obj;
+	obj.PrintInfo();
+	obj = obj--;
+	obj.PrintInfo();
+	obj = --obj;
+	obj.PrintInfo();
+	if (obj > obj2) {
+		cout << "Its work" << endl;
+	}
+	else {
+		cout << "Its dont work" << endl;
+	}
+	if (obj3 >= obj4) {
+		cout << "Its work" << endl;
+	}
+	else {
+		cout << "Its dont work" << endl;
+	}
+	if (obj3 < obj4) {
+		cout << "Its work" << endl;
+	}
+	else {
+		cout << "Its dont work" << endl;
+	}
+	if (obj <= obj2) {
+		cout << "Its work" << endl;
+	}
+	else {
+		cout << "NIts dont work" << endl;
+	}
+	if (obj == obj) {
+		cout << "Its work" << endl;
+	}
+	else {
+		cout << "Its dont work" << endl;
+	}
+	obj = obj4;
+	obj.PrintInfo();
+	cout << obj;
 }
 
 
